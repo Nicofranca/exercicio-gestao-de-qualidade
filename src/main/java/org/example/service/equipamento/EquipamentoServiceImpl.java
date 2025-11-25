@@ -15,7 +15,13 @@ public class EquipamentoServiceImpl implements EquipamentoService{
         Equipamento novoEquipamento = null;
 
         try {
+            equipamento.setStatusOperacional("OPERACIONAL");
+
             novoEquipamento = equipamentoRepository.save(equipamento);
+
+            if (novoEquipamento == null){
+                throw new RuntimeException("O equipamento não deveria ser nulo");
+            }
 
         } catch (SQLException e){
             e.printStackTrace();
@@ -26,6 +32,18 @@ public class EquipamentoServiceImpl implements EquipamentoService{
 
     @Override
     public Equipamento buscarEquipamentoPorId(Long id) throws SQLException {
+
+        try {
+            Equipamento equipamento = equipamentoRepository.findById(id);
+
+            if (equipamento ==  null){
+                throw  new RuntimeException("Equipamento não encontrado!");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         return null;
     }
 }
