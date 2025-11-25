@@ -16,7 +16,7 @@ public class EquipamentoRepository {
             stmt.setString(1, equipamento.getNome());
             stmt.setString(2, equipamento.getNumeroDeSerie());
             stmt.setString(3, equipamento.getAreaSetor());
-            stmt.setString(4, equipamento.getStatusOperacional());
+            stmt.setString(4, equipamento.setStatusOperacional("OPERACIONAL"));
 
             stmt.executeUpdate();
 
@@ -30,4 +30,5 @@ public class EquipamentoRepository {
 
         return equipamento;
     }
+
 }

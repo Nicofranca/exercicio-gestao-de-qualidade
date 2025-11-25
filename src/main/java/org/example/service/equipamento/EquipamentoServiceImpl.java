@@ -1,15 +1,27 @@
 package org.example.service.equipamento;
 
 import org.example.model.Equipamento;
+import org.example.repository.equipamento.EquipamentoRepository;
 
 import java.sql.SQLException;
 
 public class EquipamentoServiceImpl implements EquipamentoService{
+
+    EquipamentoRepository equipamentoRepository = new EquipamentoRepository();
+
     @Override
     public Equipamento criarEquipamento(Equipamento equipamento) throws SQLException {
-        Equipamento equipamento1 = new Equipamento();
 
-        return null;
+        Equipamento novoEquipamento = null;
+
+        try {
+            novoEquipamento = equipamentoRepository.save(equipamento);
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return novoEquipamento;
     }
 
     @Override

@@ -69,7 +69,8 @@ public class Equipamento {
         return statusOperacional;
     }
 
-    public void setStatusOperacional(String statusOperacional) {
+    public String setStatusOperacional(String statusOperacional) {
         this.statusOperacional = statusOperacional;
+        return statusOperacional;
     }
 }
