@@ -7,6 +7,8 @@ import java.sql.SQLException;
 public class EquipamentoServiceImpl implements EquipamentoService{
     @Override
     public Equipamento criarEquipamento(Equipamento equipamento) throws SQLException {
+        Equipamento equipamento1 = new Equipamento();
+
         return null;
     }
 
