@@ -4,6 +4,8 @@ import org.example.database.Conexao;
 import org.example.model.Falha;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.String.valueOf;
 
@@ -13,6 +15,8 @@ public class FalhaRepository {
         String query = """
                 INSERT INTO Falha(equipamentoId, dataHoraOcorrencia, descricao, criticidade, status, tempoParadaHoras) VALUES (?, ?, ?, ?, ?, ?)
                 """;
+
+        Falha newFalha = new Falha();
 
         try(Connection conn = Conexao.conectar();
             PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -27,21 +31,48 @@ public class FalhaRepository {
 
             try(ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()){
-                    falha.setId(rs.getLong(1));
-                    falha.setEquipamentoId(rs.getLong("equipamentoId"));
-                    falha.setDataHoraOcorrencia(rs.getTimestamp(valueOf(Timestamp.valueOf("dataHoraOcorrencia"))).toLocalDateTime());
-                    falha.setDescricao((rs.getString("descricao")));
-                    falha.setCriticidade(rs.getString("criticidade"));
-                    falha.setStatus(rs.getString("status"));
-                    falha.setTempoParadaHoras(rs.getBigDecimal("tempoParadaHoras"));
-
-                    return falha;
+                    newFalha.setId(rs.getLong(1));
+                    newFalha.setEquipamentoId(falha.getEquipamentoId());
+                    newFalha.setDataHoraOcorrencia(falha.getDataHoraOcorrencia());
+                    newFalha.setDescricao(falha.getDescricao());
+                    newFalha.setCriticidade(falha.getCriticidade());
+                    newFalha.setStatus(falha.getStatus());
+                    newFalha.setTempoParadaHoras(falha.getTempoParadaHoras());
                 }
             }
 
         }
 
-        return null;
+        return newFalha;
+    }
+
+    public List<Falha> listFalhas() throws SQLException{
+        String query = """
+                SELECT id, equipamentoId, dataHoraOcorrencia, descricao, criticidade, status, tempoParadaHoras FROM Falha WHERE status = 'ABERTA' and criticidade = 'CRITICA'
+                """;
+        List<Falha> listFalhas = new ArrayList<>();
+
+        try(Connection conn = Conexao.conectar();
+        PreparedStatement stmt = conn.prepareStatement(query)) {
+            try(ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()){
+                    Falha newFalha = new Falha();
+                    newFalha.setId(rs.getLong("id"));
+                    newFalha.setEquipamentoId(rs.getLong("equipamentoId"));
+                    newFalha.setDataHoraOcorrencia(rs.getTimestamp("dataHoraOcorrencia").toLocalDateTime());
+                    newFalha.setDescricao(rs.getString("descricao"));
+                    newFalha.setCriticidade(rs.getString("criticidade"));
+                    newFalha.setStatus(rs.getString("status"));
+                    newFalha.setTempoParadaHoras(rs.getBigDecimal("tempoParadaHoras"));
+
+                    listFalhas.add(newFalha);
+
+                }
+            }
+
+        }
+
+        return listFalhas;
     }
 
 

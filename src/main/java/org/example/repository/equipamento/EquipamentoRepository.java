@@ -2,6 +2,7 @@ package org.example.repository.equipamento;
 
 import org.example.database.Conexao;
 import org.example.model.Equipamento;
+import org.example.model.Falha;
 
 import java.sql.*;
 
@@ -59,5 +60,18 @@ public class EquipamentoRepository {
 
     }
 
+    public void atualizarStatusOperacional(long idEquipamento, String status) throws SQLException{
+        String query = """
+                UPDATE Equipamento SET statusOperacional = ? WHERE id = ?;
+                """;
+
+        try(Connection conn = Conexao.conectar();
+        PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, status);
+            stmt.setLong(2, idEquipamento);
+
+            stmt.executeUpdate();
+        }
+    }
 
 }
