@@ -1,6 +1,7 @@
 package org.example.repository.falha;
 
 import org.example.database.Conexao;
+import org.example.model.Equipamento;
 import org.example.model.Falha;
 
 import java.sql.*;
@@ -75,8 +76,61 @@ public class FalhaRepository {
         return listFalhas;
     }
 
+    public Falha findById(Long id) throws SQLException{
+        String query = """
+                    SELECT id, equipamentoId, dataHoraOcorrencia, descricao, criticidade, status, tempoParadaHoras FROM Falha WHERE id = ?;
+                    """;
 
+        try(Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement(query)) {
 
+            stmt.setLong(1, id);
+
+            try(ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()){
+                    Falha falha = new Falha();
+                    falha.setId(rs.getLong("id"));
+                    falha.setEquipamentoId(rs.getLong("equipamentoId"));
+                    falha.setDataHoraOcorrencia(rs.getTimestamp("dataHoraOcorrencia").toLocalDateTime());
+                    falha.setDescricao(rs.getString("descricao"));
+                    falha.setCriticidade(rs.getString("criticidade"));
+                    falha.setStatus(rs.getString("status"));
+                    falha.setTempoParadaHoras(rs.getBigDecimal("tempoParadaHoras"));
+
+                    return falha;
+                }
+            }
+        }
+
+        return null;
+
+    }
+
+    public Falha atualizarStatus(long id) throws SQLException{
+        String query = """
+                UPDATE Falha SET status = ? WHERE id = ?
+                """;
+
+        try(Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            try(ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()){
+                    Falha newFalha = new Falha();
+                    newFalha.setEquipamentoId(rs.getLong("equipamentoId"));
+                    newFalha.setDataHoraOcorrencia(rs.getTimestamp("dataHoraOcorrencia").toLocalDateTime());
+                    newFalha.setDescricao(rs.getString("descricao"));
+                    newFalha.setCriticidade(rs.getString("criticidade"));
+                    newFalha.setStatus(rs.getString("status"));
+                    newFalha.setTempoParadaHoras(rs.getBigDecimal("tempoParadaHoras"));
+
+                    return newFalha;
+                }
+            }
+        }
+
+        return null;
+    }
 
     /*private static final String SQL_CREATE_TABLE_FALHA =
             """

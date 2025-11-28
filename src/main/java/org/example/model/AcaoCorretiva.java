@@ -31,6 +31,9 @@ public class AcaoCorretiva {
 
     private String descricaoArea;
 
+    public AcaoCorretiva() {
+    }
+
     public AcaoCorretiva(Long id, Long falhaId, LocalDateTime dataHoraInicio, LocalDateTime dataHoraFim, String responsavel, String descricaoArea) {
         this.id = id;
         this.falhaId = falhaId;
