@@ -32,7 +32,7 @@ public class AcaoCorretivaRepository {
 
     public AcaoCorretiva findById(Long id) throws SQLException{
         String query = """
-                SELECT falhaId, dataHoraInicio, dataHoraFim, responsavel, descricaoAcao
+                SELECT id, falhaId, dataHoraInicio, dataHoraFim, responsavel, descricaoAcao
                 FROM AcaoCorretiva
                 WHERE id = ?;
                 """;
@@ -44,7 +44,7 @@ public class AcaoCorretivaRepository {
             try(ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()){
                     AcaoCorretiva acaoCorretiva = new AcaoCorretiva();
-                    acaoCorretiva.setFalhaId(rs.getLong("id"));
+                    acaoCorretiva.setFalhaId(rs.getLong("falhaId"));
                     acaoCorretiva.setDataHoraInicio(rs.getTimestamp("dataHoraInicio").toLocalDateTime());
                     acaoCorretiva.setDataHoraFim(rs.getTimestamp("dataHoraFim").toLocalDateTime());
                     acaoCorretiva.setResponsavel(rs.getString("responsavel"));

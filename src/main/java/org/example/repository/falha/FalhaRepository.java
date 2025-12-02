@@ -106,30 +106,19 @@ public class FalhaRepository {
 
     }
 
-    public Falha atualizarStatus(long id) throws SQLException{
+    public void atualizarStatus(long id) throws SQLException{
         String query = """
-                UPDATE Falha SET status = ? WHERE id = ?
+                UPDATE Falha SET status = "RESOLVIDA" WHERE id = ?
                 """;
 
         try(Connection conn = Conexao.conectar();
             PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            try(ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()){
-                    Falha newFalha = new Falha();
-                    newFalha.setEquipamentoId(rs.getLong("equipamentoId"));
-                    newFalha.setDataHoraOcorrencia(rs.getTimestamp("dataHoraOcorrencia").toLocalDateTime());
-                    newFalha.setDescricao(rs.getString("descricao"));
-                    newFalha.setCriticidade(rs.getString("criticidade"));
-                    newFalha.setStatus(rs.getString("status"));
-                    newFalha.setTempoParadaHoras(rs.getBigDecimal("tempoParadaHoras"));
+            stmt.setLong(1, id);
 
-                    return newFalha;
-                }
+            stmt.executeUpdate();
+
             }
-        }
-
-        return null;
     }
 
     /*private static final String SQL_CREATE_TABLE_FALHA =

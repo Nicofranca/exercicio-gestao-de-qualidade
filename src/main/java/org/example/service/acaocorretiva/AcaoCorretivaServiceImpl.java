@@ -24,15 +24,15 @@ public class AcaoCorretivaServiceImpl implements AcaoCorretivaService{
             throw new RuntimeException("Falha não encontrada!");
         }
 
-        newFalha.setStatus("RESOLVIDA");
-
         if (newFalha.getCriticidade().equalsIgnoreCase("CRITICA")){
             Equipamento equipamento = equipamentoRepository.findById(newFalha.getEquipamentoId());
 
-            equipamento.setStatusOperacional("OPERACIONAL");
+            equipamentoRepository.atualizarStatusOperacionalFalha(newFalha.getEquipamentoId());
         }
 
-        AcaoCorretiva acaoCorretiva = acaoCorretivaRepository. registrarConclusaoDeAcao(acao);
+        falhaRepository.atualizarStatus(acao.getFalhaId());
+
+        AcaoCorretiva acaoCorretiva = acaoCorretivaRepository.registrarConclusaoDeAcao(acao);
 
         return acaoCorretiva;
     }
